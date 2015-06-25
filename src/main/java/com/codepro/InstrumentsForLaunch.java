@@ -65,7 +65,7 @@ public class InstrumentsForLaunch {
                     continue;
                 }
 
-                if(numberOfPages == 123) {
+                if (numberOfPages == 123) {
                     driver.close();
                     driver.quit();
                 }
@@ -76,13 +76,17 @@ public class InstrumentsForLaunch {
             } catch (InputMismatchException e) {
                 JOptionPane.showMessageDialog(null, "Invalid Parameter. Please Restart Program",
                         "Warning", JOptionPane.WARNING_MESSAGE);
+                closeAllWindows();
                 break;
 
             } catch (ArrayIndexOutOfBoundsException e) {
-                JOptionPane.showMessageDialog(null, "Invalid Parameter", "Warning", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Invalid Parameter", "Warning",
+                        JOptionPane.WARNING_MESSAGE);
+                System.out.print("Enter the Next Page Number From (0 - 15): ");
 
             } catch (IndexOutOfBoundsException e) {
-                closeWindow();
+                closeAllWindows();
+                System.out.print("Enter the Next Page Number From (0 - 15): ");
 
             } catch (NoSuchElementException e) {
                 e.getMessage();
@@ -105,11 +109,11 @@ public class InstrumentsForLaunch {
         findElement.get(number).click();
 
         System.out.println("Title Page: " + findElement.get(number).getText());
-        System.out.print("Enter the Next Page Number From (0 - 10): ");
+        System.out.print("Enter the Next Page Number From (0 - 15): ");
 
     }
 
-    public void closeWindow() {
+    public void closeAllWindows() {
         String originalHandle = driver.getWindowHandle();
 
         for (String handle : driver.getWindowHandles()) {
@@ -129,17 +133,20 @@ public class InstrumentsForLaunch {
         int i = 0;
         for (WebElement webElement : findElement) {
             i++;
-            System.out.println("Title Page: "   + webElement.getText());
+            System.out.println("Title Page: " + webElement.getText());
             System.out.println("Link On Page: " + webElement.getAttribute("href"));
             System.out.println("-------------------------------");
         }
+
+        System.out.print("Enter the Next Page Number From (0 - 15): ");
     }
 
     public void infoAboutGoogleSearch() {
-        System.out.println("For Clear The Pages View. Write any number > 50");
-        System.out.println("For Example: \"Enter the Next Page Number From (0 - 10): 50\"");
-        System.out.println("For View All Links. Write number 999");
-        System.out.println("For Exit. Write 123");
+        System.out.println("---Navigate On The Program---");
+        System.out.println("Use The Next Number: ");
+        System.out.println("** Close All Windows Except Main. Any Number > 50");
+        System.out.println("** Show All Links. Number Should Be 999");
+        System.out.println("** Exit. Number Should be 123");
         System.out.println();
     }
 

@@ -28,7 +28,7 @@ public class GoogleHomePageObjects {
 
         txtSearch.sendKeys(searchText);
         btnSearch.click();
-        System.out.print("Enter Page Number From (0 - 10): ");
+        System.out.print("Enter Page Number From (0 - 15): ");
 
     }
 }
