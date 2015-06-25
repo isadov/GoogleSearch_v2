@@ -4,18 +4,22 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.SessionNotFoundException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.swing.*;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class InstrumentsForLaunch {
 
     private WebDriver driver = new FirefoxDriver();
     private final String url = "http://www.google.ru/";
-    private Scanner scanner = new Scanner(System.in);
+    private String encoding = System.getProperty("console.encoding", "utf-8");
+    private Scanner scanner = new Scanner(System.in, encoding);
     private final int timeOut = 20;
 
     public InstrumentsForLaunch() {
@@ -24,13 +28,13 @@ public class InstrumentsForLaunch {
 
     public void run() {
 
+        infoAboutGoogleSearch();
+
         driver.get(url);
 
         startGooglePage();
 
-        createNewTab();
-
-        showAllUrl();
+        createNewWindow();
 
     }
 
@@ -38,7 +42,7 @@ public class InstrumentsForLaunch {
 
         GoogleHomePageObjects pageObjects = new GoogleHomePageObjects(driver);
 
-        System.out.print("Your Text For Search: ");
+        System.out.print("Enter your request: ");
 
         String txt = scanner.nextLine();
 
@@ -49,20 +53,42 @@ public class InstrumentsForLaunch {
 
     }
 
-    public void createNewTab() {
-
-        int i = 10;
+    public void createNewWindow() {
 
         while (driver != null) {
 
-            int numberOfPages = scanner.nextInt();
-            goToTheWebsite(numberOfPages);
-            i--;
+            try {
+                int numberOfPages = scanner.nextInt();
 
-            if (i <= 0) {
-                closeWindow();
-                JOptionPane.showMessageDialog(null, "Please Restart The Program. Open More Than 10 Window's",
+                if (numberOfPages == 999) {
+                    showAllLinks();
+                    continue;
+                }
+
+                if(numberOfPages == 123) {
+                    driver.close();
+                    driver.quit();
+                }
+
+                goToTheWebsite(numberOfPages);
+
+
+            } catch (InputMismatchException e) {
+                JOptionPane.showMessageDialog(null, "Invalid Parameter. Please Restart Program",
                         "Warning", JOptionPane.WARNING_MESSAGE);
+                break;
+
+            } catch (ArrayIndexOutOfBoundsException e) {
+                JOptionPane.showMessageDialog(null, "Invalid Parameter", "Warning", JOptionPane.WARNING_MESSAGE);
+
+            } catch (IndexOutOfBoundsException e) {
+                closeWindow();
+
+            } catch (NoSuchElementException e) {
+                e.getMessage();
+
+            } catch (SessionNotFoundException e) {
+                e.getMessage();
                 break;
             }
         }
@@ -78,8 +104,9 @@ public class InstrumentsForLaunch {
         findElement.addAll(findElement);
         findElement.get(number).click();
 
-        System.out.println("Page Named: " + findElement.get(number).getText());
-        System.out.print("Input Next Number Page. From (0 - 10): ");
+        System.out.println("Title Page: " + findElement.get(number).getText());
+        System.out.print("Enter the Next Page Number From (0 - 10): ");
+
     }
 
     public void closeWindow() {
@@ -94,17 +121,26 @@ public class InstrumentsForLaunch {
         driver.switchTo().window(originalHandle);
     }
 
-    public void showAllUrl() {
+    public void showAllLinks() {
 
         System.out.println();
-        System.err.println("----------------SEARCH RESULT--------------------");
+        System.out.println("----------------SEARCH RESULTS--------------------");
         List<WebElement> findElement = driver.findElements(By.xpath("//*[@id='rso']//h3/a"));
-
+        int i = 0;
         for (WebElement webElement : findElement) {
-            System.out.println("Name Of Window: " + webElement.getText().toUpperCase());
+            i++;
+            System.out.println("Title Page: "   + webElement.getText());
             System.out.println("Link On Page: " + webElement.getAttribute("href"));
-            System.out.println("--------------------------");
+            System.out.println("-------------------------------");
         }
+    }
+
+    public void infoAboutGoogleSearch() {
+        System.out.println("For Clear The Pages View. Write any number > 50");
+        System.out.println("For Example: \"Enter the Next Page Number From (0 - 10): 50\"");
+        System.out.println("For View All Links. Write number 999");
+        System.out.println("For Exit. Write 123");
+        System.out.println();
     }
 
 
